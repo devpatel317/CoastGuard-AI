@@ -16,6 +16,9 @@ import {
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import OceanErosionCard from '@/components/Erosion'
+import TimelineSlider from '@/components/TimelineSlider'
+
 
 // Alert interface
 interface Alert {
@@ -373,10 +376,12 @@ const Dashboard = () => {
               </div>
               <div>Last Updated: {cycloneMonitor.lastUpdated.toLocaleTimeString()}</div>
               <div>6 Monitoring Stations</div>
+              <TimelineSlider/>
             </div>
           </div>
         </div>
       </div>
+      
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Alert Banner */}
@@ -402,7 +407,7 @@ const Dashboard = () => {
           </div>
 
           {/* Main Cyclone Card */}
-          <Card className="p-8 shadow-lg border-2 hover:shadow-xl transition-all duration-300">
+          <Card className="p-8 shadow-lg border-2 hover:shadow-xl transition-all duration-300 my-5">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-4">
                 <div className={`p-4 rounded-2xl border-2 ${cycloneMonitor.getRiskClasses(cycloneData.level)} transition-all duration-300`}>
@@ -460,36 +465,222 @@ const Dashboard = () => {
             {/* Controls */}
             <div className="flex items-center justify-between pt-4 border-t">
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className={`w-3 h-3 rounded-full ${
-                    cycloneData.level === "danger" ? "bg-red-500 animate-pulse" :
-                    cycloneData.level === "warning" ? "bg-yellow-500" :
-                    cycloneData.level === "safe" ? "bg-blue-500" : "bg-green-500"
-                  }`} />
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      cycloneData.level === "danger" ? "bg-red-500 animate-pulse" :
+                      cycloneData.level === "warning" ? "bg-yellow-500" :
+                      cycloneData.level === "safe" ? "bg-blue-500" : "bg-green-500"
+                    }`} />
                   <span className="text-sm text-gray-600 capitalize font-medium">{cycloneData.status}</span>
                 </div>
                 <div className="text-xs text-gray-500">
                   Last updated: {cycloneMonitor.lastUpdated.toLocaleTimeString()}
                 </div>
-              </div>
+                </div>
               
-              <Button 
-                onClick={cycloneMonitor.handleUpdate} 
-                disabled={cycloneMonitor.loading} 
-                className="min-w-[100px]"
-              >
-                {cycloneMonitor.loading ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    <span>Updating...</span>
-                  </div>
-                ) : (
-                  "Update Now"
-                )}
-              </Button>
+                <Button 
+                  onClick={cycloneMonitor.handleUpdate} 
+                  disabled={cycloneMonitor.loading} 
+                  className="min-w-[100px]"
+                >
+                  {cycloneMonitor.loading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <span>Updating...</span>
+                    </div>
+                  ) : (
+                    "Update Now"
+                  )}
+                </Button>
+              </div>
             </div>
           </Card>
+          <OceanErosionCard/>
+
+          <Card className="p-8 shadow-lg border-2 hover:shadow-xl transition-all duration-300 my-5">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-4">
+                <div className={`p-4 rounded-2xl border-2 ${cycloneMonitor.getRiskClasses(cycloneData.level)} transition-all duration-300`}>
+                  <Wind className="h-8 w-8" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Cyclone Risk Assessment</h1>
+                  <p className={`text-lg font-semibold ${cycloneMonitor.getRiskColor(cycloneData.level)}`}>{cycloneData.status}</p>
+                  <p className="text-sm text-gray-600 mt-1">{cycloneMonitor.getStatusMessage(cycloneData.level, cycloneData.riskScore)}</p>
+                </div>
+              </div>
+              
+              <div className="text-right">
+                <div className={`text-4xl font-bold ${cycloneMonitor.getRiskColor(cycloneData.level)}`}>{cycloneData.riskScore}</div>
+                <div className="text-sm text-gray-500">Risk Score</div>
+                <div className="flex items-center justify-end space-x-1 mt-1">
+                  <Activity className={`h-3 w-3 ${cycloneMonitor.isActive ? 'text-green-500' : 'text-gray-400'}`} />
+                  <span className="text-xs text-gray-500">
+                    {cycloneMonitor.isActive ? 'Active' : 'Paused'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Sensor Data Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Thermometer className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-700">Temperature</span>
+                </div>
+                <div className="text-xl font-bold text-gray-900">{cycloneMonitor.sensorData.temperature_2m}°C</div>
+                <div className="text-xs text-gray-500">Air Temperature</div>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Waves className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-700">Wave Height</span>
+                </div>
+                <div className="text-xl font-bold text-gray-900">{cycloneMonitor.sensorData.wave_height}m</div>
+                <div className="text-xs text-gray-500">Current Waves</div>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Wind className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-700">Wind Speed</span>
+                </div>
+                <div className="text-xl font-bold text-gray-900">{cycloneData.windSpeed}km/h</div>
+                <div className="text-xs text-gray-500">Current Wind</div>
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      cycloneData.level === "danger" ? "bg-red-500 animate-pulse" :
+                      cycloneData.level === "warning" ? "bg-yellow-500" :
+                      cycloneData.level === "safe" ? "bg-blue-500" : "bg-green-500"
+                    }`} />
+                  <span className="text-sm text-gray-600 capitalize font-medium">{cycloneData.status}</span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Last updated: {cycloneMonitor.lastUpdated.toLocaleTimeString()}
+                </div>
+                </div>
+              
+                <Button 
+                  onClick={cycloneMonitor.handleUpdate} 
+                  disabled={cycloneMonitor.loading} 
+                  className="min-w-[100px]"
+                >
+                  {cycloneMonitor.loading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <span>Updating...</span>
+                    </div>
+                  ) : (
+                    "Update Now"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
+          <OceanErosionCard/>
+
+          <Card className="p-8 shadow-lg border-2 hover:shadow-xl transition-all duration-300 my-5">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-4">
+                <div className={`p-4 rounded-2xl border-2 ${cycloneMonitor.getRiskClasses(cycloneData.level)} transition-all duration-300`}>
+                  <Wind className="h-8 w-8" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Cyclone Risk Assessment</h1>
+                  <p className={`text-lg font-semibold ${cycloneMonitor.getRiskColor(cycloneData.level)}`}>{cycloneData.status}</p>
+                  <p className="text-sm text-gray-600 mt-1">{cycloneMonitor.getStatusMessage(cycloneData.level, cycloneData.riskScore)}</p>
+                </div>
+              </div>
+              
+              <div className="text-right">
+                <div className={`text-4xl font-bold ${cycloneMonitor.getRiskColor(cycloneData.level)}`}>{cycloneData.riskScore}</div>
+                <div className="text-sm text-gray-500">Risk Score</div>
+                <div className="flex items-center justify-end space-x-1 mt-1">
+                  <Activity className={`h-3 w-3 ${cycloneMonitor.isActive ? 'text-green-500' : 'text-gray-400'}`} />
+                  <span className="text-xs text-gray-500">
+                    {cycloneMonitor.isActive ? 'Active' : 'Paused'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Sensor Data Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Thermometer className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-700">Temperature</span>
+                </div>
+                <div className="text-xl font-bold text-gray-900">{cycloneMonitor.sensorData.temperature_2m}°C</div>
+                <div className="text-xs text-gray-500">Air Temperature</div>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Waves className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-700">Wave Height</span>
+                </div>
+                <div className="text-xl font-bold text-gray-900">{cycloneMonitor.sensorData.wave_height}m</div>
+                <div className="text-xs text-gray-500">Current Waves</div>
+              </div>
+              
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Wind className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-gray-700">Wind Speed</span>
+                </div>
+                <div className="text-xl font-bold text-gray-900">{cycloneData.windSpeed}km/h</div>
+                <div className="text-xs text-gray-500">Current Wind</div>
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      cycloneData.level === "danger" ? "bg-red-500 animate-pulse" :
+                      cycloneData.level === "warning" ? "bg-yellow-500" :
+                      cycloneData.level === "safe" ? "bg-blue-500" : "bg-green-500"
+                    }`} />
+                  <span className="text-sm text-gray-600 capitalize font-medium">{cycloneData.status}</span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Last updated: {cycloneMonitor.lastUpdated.toLocaleTimeString()}
+                </div>
+                </div>
+              
+                <Button 
+                  onClick={cycloneMonitor.handleUpdate} 
+                  disabled={cycloneMonitor.loading} 
+                  className="min-w-[100px]"
+                >
+                  {cycloneMonitor.loading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      <span>Updating...</span>
+                    </div>
+                  ) : (
+                    "Update Now"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
+          <OceanErosionCard/>
         </div>
+
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -573,6 +764,7 @@ const ThreatCard = ({ threat }) => {
           Updated: {threat.lastUpdated}
         </div>
       </div>
+      <OceanErosionCard/>
     </div>
   );
 };

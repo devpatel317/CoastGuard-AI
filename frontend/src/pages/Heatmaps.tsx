@@ -1,50 +1,83 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapPin, Layers, Eye, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
 const Heatmaps = () => {
-  const [selectedLayers, setSelectedLayers] = useState(['cyclone', 'pollution']);
+  const [selectedLayers, setSelectedLayers] = useState(['wind']);
+  const [mapUrl, setMapUrl] = useState(
+    "https://earth.nullschool.net/#current/ocean/wind/overlay=current/orthographic=-289.47,21.34,5089/loc=69.969,21.513"
+  );
+
+  // ✅ Location state
+  const [locationData, setLocationData] = useState({
+    longitude: 69.969,
+    latitude: 21.5137,
+    location: "Unknown"
+  });
 
   const layers = [
     { 
-      id: 'cyclone', 
-      name: 'Cyclone Risk', 
+      id: 'wind', 
+      name: 'Wind', 
       color: 'bg-danger', 
-      active: true,
-      description: 'Real-time cyclone formation and intensity tracking'
+      description: 'Real-time wind tracking',
+      url: "https://earth.nullschool.net/#current/ocean/wind/overlay=current/orthographic=-293.25,20.93,2698/loc=69.969,21.5137"
     },
     { 
       id: 'tide', 
       name: 'Tide Levels', 
       color: 'bg-primary', 
-      active: false,
-      description: 'Current and predicted tidal patterns'
+      description: 'Current ocean wave patterns',
+      url: "https://earth.nullschool.net/#current/ocean/primary/waves/overlay=significant_wave_height/orthographic=-293.25,20.93,2698/loc=69.969,21.5137"
     },
     { 
       id: 'erosion', 
       name: 'Erosion Risk', 
       color: 'bg-warning', 
-      active: false,
-      description: 'Coastal erosion monitoring and prediction'
-    },
-    { 
-      id: 'pollution', 
-      name: 'Pollution Events', 
-      color: 'bg-accent', 
-      active: true,
-      description: 'Water quality and contamination tracking'
+      description: 'CO2 concentration + wind overlay',
+      url: "https://earth.nullschool.net/#current/chem/co2sc/wind/overlay=current/orthographic=-293.25,20.93,2698/loc=69.969,21.5137"
     }
   ];
 
-  const toggleLayer = (layerId: string) => {
+  const toggleLayer = (layerId: string, url: string) => {
     setSelectedLayers(prev => 
       prev.includes(layerId) 
         ? prev.filter(id => id !== layerId)
         : [...prev, layerId]
     );
+
+    setMapUrl(url);
   };
+
+  // ✅ Monitor map URL hash to detect click location
+  useEffect(() => {
+    const iframe = document.getElementById("earth-map") as HTMLIFrameElement;
+
+    if (!iframe) return;
+
+    const interval = setInterval(() => {
+      try {
+        // Read iframe URL hash
+        const hash = new URL(iframe.src).hash;
+        const locMatch = hash.match(/loc=([\d.-]+),([\d.-]+)/);
+        if (locMatch) {
+          const lon = parseFloat(locMatch[1]);
+          const lat = parseFloat(locMatch[2]);
+          setLocationData({
+            longitude: lon,
+            latitude: lat,
+            location: `Lat ${lat.toFixed(3)}, Lon ${lon.toFixed(3)}`
+          });
+        }
+      } catch (err) {
+        console.warn("Cannot read iframe URL (cross-origin): ", err);
+      }
+    }, 1000); // check every second
+
+    return () => clearInterval(interval);
+  }, [mapUrl]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +102,7 @@ const Heatmaps = () => {
                   <div 
                     key={layer.id}
                     className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-smooth cursor-pointer"
-                    onClick={() => toggleLayer(layer.id)}
+                    onClick={() => toggleLayer(layer.id, layer.url)}
                   >
                     <div className="flex items-center space-x-3">
                       <div className={`w-4 h-4 rounded ${layer.color}`} />
@@ -89,86 +122,46 @@ const Heatmaps = () => {
                   </div>
                 ))}
               </div>
+</Card>
 
-              <div className="mt-6 pt-4 border-t">
-                <h3 className="font-medium mb-3">Risk Legend</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-success rounded" />
-                    <span className="text-sm">Low Risk</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-warning rounded" />
-                    <span className="text-sm">Moderate Risk</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 bg-danger rounded" />
-                    <span className="text-sm">High Risk</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
+              {/* Display clicked location */}
+   {/* Clicked Location Info Card */}
+<Card className="mt-6 p-4 bg-background/80 border border-muted-foreground rounded-xl shadow-sm">
+  <h3 className="font-semibold text-lg mb-4 text-foreground">Clicked Location Info</h3>
+  <div className="space-y-3">
+    <div className="p-3 bg-primary/10 rounded-lg flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
+      <span className="text-sm text-muted-foreground">Longitude</span>
+      <span className="text-lg font-semibold text-foreground">{locationData.longitude.toFixed(3)}</span>
+    </div>
+    <div className="p-3 bg-primary/10 rounded-lg flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
+      <span className="text-sm text-muted-foreground">Latitude</span>
+      <span className="text-lg font-semibold text-foreground">{locationData.latitude.toFixed(3)}</span>
+    </div>
+    <div className="p-3 bg-primary/10 rounded-lg flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
+      <span className="text-sm text-muted-foreground">Overall</span>
+      <span className="text-lg font-semibold text-foreground">Arabian Sea</span>
+    </div>
+  </div>
+</Card>
 
-            {/* Quick Actions */}
-            <Card className="p-6 mt-6">
-              <h3 className="font-semibold mb-4">Quick Actions</h3>
-              <div className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Find My Location
-                </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Map Settings
-                </Button>
-              </div>
-            </Card>
+
           </div>
 
           {/* Map Container */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3"> 
             <Card className="map-container h-[600px] lg:h-[700px]">
-              <div className="w-full h-full bg-gradient-to-br from-primary/5 to-primary-glow/10 rounded-xl flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-                    <MapPin className="h-8 w-8 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
-                      Interactive Map Loading
-                    </h3>
-                    <p className="text-muted-foreground max-w-md">
-                      This is a placeholder for the interactive Leaflet/Mapbox map component. 
-                      The map will show real-time threat heatmaps with the selected layers.
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
-                    <span>Lat: 13.0827° N</span>
-                    <span>Lng: 80.2707° E</span>
-                    <span>Zoom: 8</span>
-                  </div>
-                </div>
+              <div className="w-full h-full rounded-xl overflow-hidden">
+                <iframe
+                  id="earth-map"
+                  src={mapUrl}
+                  className="w-full h-full border-0"
+                  allowFullScreen
+                  loading="lazy"
+                  title="Earth Nullschool Map"
+                  sandbox="allow-scripts allow-same-origin" 
+                />
               </div>
             </Card>
-
-            {/* Map Info Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <Card className="p-4">
-                <div className="text-sm text-muted-foreground">Current View</div>
-                <div className="text-lg font-semibold">Bay of Bengal</div>
-                <div className="text-xs text-muted-foreground mt-1">Eastern Coastal Region</div>
-              </Card>
-              <Card className="p-4">
-                <div className="text-sm text-muted-foreground">Active Threats</div>
-                <div className="text-lg font-semibold text-danger">2 High Risk</div>
-                <div className="text-xs text-muted-foreground mt-1">Cyclone + Pollution</div>
-              </Card>
-              <Card className="p-4">
-                <div className="text-sm text-muted-foreground">Last Updated</div>
-                <div className="text-lg font-semibold">3 min ago</div>
-                <div className="text-xs text-muted-foreground mt-1">Auto-refresh enabled</div>
-              </Card>
-            </div>
           </div>
         </div>
       </div>
