@@ -4,6 +4,8 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse 
 
 
 # 1) Load the trained model
@@ -13,6 +15,21 @@ model3 = joblib.load("../backend/models/OceanAcidificaion/ocean_acidification_mo
 
 # 2) Create FastAPI app
 app = FastAPI(title="Coastal Erosion Prediction API")
+
+# Allow requests from your frontend
+origins = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # 3) Define request schema
 class PredictionRequest(BaseModel):
@@ -85,9 +102,13 @@ def predict_cyclone(features: CycloneInput):
         features.wind_direction_100m
     ]])
 
-    prediction = model2.predict(data)[0]
+    prediction = int(model2.predict(data)[0])
     result = "Cyclone Detected" if prediction == 1 else "No Cyclone"
-    return {"prediction": int(prediction), "message": result}
+
+    return JSONResponse(content={
+        "prediction": prediction,
+        "message": result
+    })
 
 @app.post("/predict_acidification")
 def predict_acidification(data: OceanInput):
@@ -110,7 +131,7 @@ def forecast_next_5_years():
     """Predict ocean pH for next 5 years based on last row + trends"""
     
     # Get absolute path (safe way)
-    file_path = os.path.join(os.path.dirname(__file__), "models", "OceanAcidificaion", "oceanData.csv")
+    file_path = os.path.join(os.path.dirname(_file_), "models", "OceanAcidificaion", "oceanData.csv")
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Dataset not found at {file_path}")
