@@ -1,0 +1,225 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Coastal Threat Alert System Design System */
+
+@layer base {
+  :root {
+    /* Ocean-inspired base colors */
+    --background: 240 10% 98%;
+    --foreground: 210 40% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 8%;
+
+    /* Maritime primary - deep ocean blue */
+    --primary: 204 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 204 100% 60%;
+
+    /* Coastal secondary - light ocean */
+    --secondary: 200 50% 96%;
+    --secondary-foreground: 204 100% 25%;
+
+    --muted: 200 20% 95%;
+    --muted-foreground: 200 10% 40%;
+
+    --accent: 185 100% 85%;
+    --accent-foreground: 204 100% 25%;
+
+    /* Threat level colors */
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --warning: 25 95% 53%;
+    --warning-foreground: 0 0% 100%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --safe: 142 85% 85%;
+    --safe-foreground: 142 76% 20%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 200 20% 90%;
+    --input: 200 20% 90%;
+    --ring: 204 100% 40%;
+
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(204 100% 40%), hsl(185 100% 45%));
+    --gradient-coastal: linear-gradient(180deg, hsl(200 50% 98%), hsl(200 30% 95%));
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(15 90% 65%));
+    --gradient-warning: linear-gradient(135deg, hsl(25 95% 53%), hsl(35 95% 58%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(152 80% 40%));
+
+    /* Shadows */
+    --shadow-coastal: 0 4px 20px -4px hsl(204 100% 40% / 0.15);
+    --shadow-elevated: 0 8px 30px -6px hsl(204 100% 40% / 0.25);
+    --shadow-danger: 0 4px 20px -4px hsl(0 84% 60% / 0.25);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 210 40% 8%;
+    --foreground: 200 50% 95%;
+
+    --card: 210 40% 10%;
+    --card-foreground: 200 50% 95%;
+
+    --popover: 210 40% 10%;
+    --popover-foreground: 200 50% 95%;
+
+    --primary: 204 100% 60%;
+    --primary-foreground: 210 40% 8%;
+    --primary-glow: 204 100% 70%;
+
+    --secondary: 210 40% 12%;
+    --secondary-foreground: 200 50% 90%;
+
+    --muted: 210 40% 12%;
+    --muted-foreground: 200 10% 60%;
+
+    --accent: 185 100% 15%;
+    --accent-foreground: 185 100% 85%;
+
+    --border: 210 40% 15%;
+    --input: 210 40% 15%;
+    --ring: 204 100% 60%;
+
+    /* Dark mode shadows */
+    --shadow-coastal: 0 4px 20px -4px hsl(204 100% 30% / 0.3);
+    --shadow-elevated: 0 8px 30px -6px hsl(204 100% 30% / 0.4);
+  }
+}
+
+@layer components {
+  /* Threat level variants */
+  .threat-danger {
+    @apply bg-gradient-to-br from-danger to-danger/90 text-danger-foreground;
+    box-shadow: var(--shadow-danger);
+  }
+  
+  .threat-warning {
+    @apply bg-gradient-to-br from-warning to-warning/90 text-warning-foreground;
+    box-shadow: 0 4px 20px -4px hsl(var(--warning) / 0.25);
+  }
+  
+  .threat-success {
+    @apply bg-gradient-to-br from-success to-success/90 text-success-foreground;
+    box-shadow: 0 4px 20px -4px hsl(var(--success) / 0.25);
+  }
+  
+  .threat-safe {
+    @apply bg-safe text-safe-foreground border border-success/20;
+  }
+
+  /* Ocean gradient backgrounds */
+  .bg-ocean-gradient {
+    background: var(--gradient-ocean);
+  }
+  
+  .bg-coastal-gradient {
+    background: var(--gradient-coastal);
+  }
+
+  /* Alert animations */
+  .alert-pulse {
+    animation: alert-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Floating chat widget */
+  .chat-widget {
+    @apply fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground rounded-full p-4;
+    box-shadow: var(--shadow-elevated);
+    transition: var(--transition-smooth);
+  }
+  
+  .chat-widget:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated), 0 0 30px hsl(var(--primary) / 0.3);
+  }
+
+  /* Map container styling */
+  .map-container {
+    @apply relative rounded-xl overflow-hidden;
+    box-shadow: var(--shadow-coastal);
+  }
+}
+
+@layer utilities {
+  /* Custom animations keyframes */
+  @keyframes alert-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in-scale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Animation utilities */
+  .animate-slide-in {
+    animation: slide-in 0.4s ease-out;
+  }
+  
+  .animate-fade-in-scale {
+    animation: fade-in-scale 0.3s ease-out;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+}

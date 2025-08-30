@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.h5
+saved_models/
+*.tflite
+.models/
+.logs/
+.DS_Store
+data/
+.env
