@@ -12,7 +12,7 @@ const Navigation = () => {
     { name: 'Community Reports', path: '/reports' },
     { name: 'SitReps', path: '/sitreps' },
     { name: 'Climate Projections', path: '/climate' },
-    { name: 'Settings', path: '/settings' },
+   
   ];
 
   return (

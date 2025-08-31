@@ -13,8 +13,8 @@ const LandingPage = ({ onGetStarted }) => {
     },
     {
       icon: <Satellite className="h-8 w-8 text-green-500" />,
-      title: "Satellite Data Integration",
-      description: "Real-time analysis of satellite imagery to detect illegal dumping, algal blooms, and coastal erosion patterns."
+      title: "Data Integration",
+      description: "Real-time analysis of data to detect illegal dumping, algal blooms, and coastal erosion patterns."
     },
     {
       icon: <Users className="h-8 w-8 text-purple-500" />,
@@ -43,7 +43,6 @@ const LandingPage = ({ onGetStarted }) => {
     { name: "Tsunamis", color: "bg-purple-100 text-purple-800" },
     { name: "High Tides", color: "bg-blue-100 text-blue-800" },
     { name: "Pollution Events", color: "bg-yellow-100 text-yellow-800" },
-    { name: "Algal Blooms", color: "bg-green-100 text-green-800" },
     { name: "Sea Level Rise", color: "bg-indigo-100 text-indigo-800" }
   ];
 
@@ -83,14 +82,7 @@ const LandingPage = ({ onGetStarted }) => {
                 <Shield className="ml-2 h-5 w-5" />
               </Button>
               
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 text-lg font-semibold transition-all duration-200"
-              >
-                Watch Demo
-                <AlertTriangle className="ml-2 h-5 w-5" />
-              </Button>
+             
             </div>
 
             {/* Risk Tags */}
@@ -181,7 +173,7 @@ const LandingPage = ({ onGetStarted }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
-              { step: "01", title: "Data Collection", desc: "Satellite feeds, sensors, and community reports" },
+              { step: "01", title: "Data Collection", desc: "Govt sites, sensors, and community reports" },
               { step: "02", title: "AI Analysis", desc: "Machine learning detects anomalies and validates reports" },
               { step: "03", title: "Risk Assessment", desc: "Automated scoring categorizes threats by severity" },
               { step: "04", title: "Alert & Response", desc: "Instant notifications and action playbooks delivered" }

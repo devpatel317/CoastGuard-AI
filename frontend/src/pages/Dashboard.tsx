@@ -644,7 +644,7 @@ const Dashboard = () => {
                     Next 5 Years (Sample Data)
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
-                    Projected ocean pH values for the years 2101-2105 based on model predictions.
+                    Projected ocean pH values for the years 2026-2030 based on model predictions.
                   </p>
                 </div>
               </div>
@@ -659,24 +659,24 @@ const Dashboard = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">2101</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7.7217</td>
+                    <td className="px-6 py-4 whitespace-nowrap">2026</td>
+                    <td className="px-6 py-4 whitespace-nowrap">7.3</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">2102</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7.7216</td>
+                    <td className="px-6 py-4 whitespace-nowrap">2027</td>
+                    <td className="px-6 py-4 whitespace-nowrap">7.6</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">2103</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7.7215</td>
+                    <td className="px-6 py-4 whitespace-nowrap">2028</td>
+                    <td className="px-6 py-4 whitespace-nowrap">7.7</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">2104</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7.7214</td>
+                    <td className="px-6 py-4 whitespace-nowrap">2029</td>
+                    <td className="px-6 py-4 whitespace-nowrap">7.7</td>
                   </tr>
                   <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">2105</td>
-                    <td className="px-6 py-4 whitespace-nowrap">7.7213</td>
+                    <td className="px-6 py-4 whitespace-nowrap">2030</td>
+                    <td className="px-6 py-4 whitespace-nowrap">7.9</td>
                   </tr>
                 </tbody>
               </table>

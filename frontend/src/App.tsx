@@ -69,14 +69,14 @@ const App: React.FC = () => (
                 <ChatWidget />
               </>
             } />
-            <Route path="/settings" element={
+            {/* <Route path="/settings" element={
               <>
                 <AlertBanner />
                 <Navigation />
                 <Settings />
                 <ChatWidget />
-              </>
-            } />
+              </> */}
+            {/* } /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

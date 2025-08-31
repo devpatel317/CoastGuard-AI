@@ -8,8 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse 
 import smtplib
 from email.mime.text import MIMEText
-# from twilio.rest import Client   # pip install twilio
-
 
 
 # Alert recipients
@@ -48,20 +46,6 @@ app.add_middleware(
 )
 
 
-
-# # ================= ALERT FUNCTIONS =================
-# def send_sms(message: str):
-#     try:
-#         client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
-#         for phone in PHONE_NUMBERS:
-#             client.messages.create(
-#                 body=message,
-#                 from_=TWILIO_PHONE,
-#                 to=phone
-#             )
-#         print("✅ SMS alerts sent")
-#     except Exception as e:
-#         print("❌ SMS sending failed:", e)
 
 
 def send_email(message: str, subject="⚠ Disaster Alert"):

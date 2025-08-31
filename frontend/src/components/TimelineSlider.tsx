@@ -43,17 +43,17 @@ const TimelineSlider = () => {
       color: 'text-primary',
     };
     if (year <= 2035) return {
-      period: 'Short-term Projections (2030)',
+      period: 'Short-term Projections',
       description: 'Moderate sea level rise and increased storm intensity',
       color: 'text-warning',
     };
     if (year <= 2055) return {
-      period: 'Medium-term Projections (2050)',
+      period: 'Medium-term Projections',
       description: 'Significant coastal changes expected (~30cm sea level rise)',
       color: 'text-warning',
     };
     return {
-      period: 'Long-term Projections (2100)',
+      period: 'Long-term Projections',
       description: 'Dramatic coastline changes with up to 70cm rise possible',
       color: 'text-danger',
     };
