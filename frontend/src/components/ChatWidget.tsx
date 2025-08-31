@@ -23,6 +23,22 @@ const ChatWidget = () => {
     'Show me safe swimming areas'
   ];
 
+  // Define responses to quick questions
+  const getBotResponse = (question: string) => {
+    switch (question) {
+      case 'Am I safe to fish today?':
+        return 'Fishing conditions are safe today. No warnings reported.';
+      case 'Where is the nearest evacuation center?':
+        return 'The nearest evacuation center is at 5th Avenue, Coastal Shelter, 24/7 operation.';
+      case 'What\'s the current cyclone risk?':
+        return 'Currently, there is no cyclone risk in your area. Conditions are calm.';
+      case 'Show me safe swimming areas':
+        return 'Safe swimming areas today: North Beach and South Bay. No rip currents detected.';
+      default:
+        return 'I\'m still learning, but I can help with safety-related questions! Try asking about coastal conditions or evacuation centers.';
+    }
+  };
+
   const handleSendMessage = () => {
     if (!message.trim()) return;
 
@@ -36,20 +52,37 @@ const ChatWidget = () => {
     setMessages([...messages, newMessage]);
     setMessage('');
 
-    // Simulate AI response
-    setTimeout(() => {
-      const botResponse = {
-        id: messages.length + 2,
-        type: 'bot',
-        content: 'Thank you for your question. Based on current data analysis, I\'m processing your request. This is a placeholder response - the AI backend will provide real-time safety recommendations.',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botResponse]);
-    }, 1000);
+    // Generate a bot response based on the question
+    const botResponse = {
+      id: messages.length + 2,
+      type: 'bot',
+      content: getBotResponse(message),
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, botResponse]);
   };
 
   const handleQuickQuestion = (question: string) => {
     setMessage(question);
+    const botResponse = {
+      id: messages.length + 1,
+      type: 'user',
+      content: question,
+      timestamp: new Date()
+    };
+
+    setMessages([...messages, botResponse]);
+
+    // Generate a bot response based on the quick question
+    const quickBotResponse = {
+      id: messages.length + 2,
+      type: 'bot',
+      content: getBotResponse(question),
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, quickBotResponse]);
   };
 
   return (
@@ -64,7 +97,7 @@ const ChatWidget = () => {
 
       {/* Chat Panel */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-80 h-96 bg-card border shadow-elevated animate-fade-in-scale z-50">
+        <Card className="fixed bottom-24 right-6 w-100 h-120 bg-card border shadow-elevated animate-fade-in-scale z-50">
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
@@ -96,7 +129,7 @@ const ChatWidget = () => {
             <div className="p-3 border-t">
               <p className="text-xs text-muted-foreground mb-2">Quick questions:</p>
               <div className="grid grid-cols-1 gap-1">
-                {quickQuestions.slice(0, 2).map((question, index) => (
+                {quickQuestions.map((question, index) => (
                   <Button
                     key={index}
                     variant="ghost"

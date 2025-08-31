@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import AlertBanner from "./components/AlertBanner";
 import ChatWidget from "./components/ChatWidget";
+import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Heatmaps from "./pages/Heatmaps";
 import CommunityReports from "./pages/CommunityReports";
@@ -16,26 +17,68 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
         <div className="min-h-screen bg-background">
-          <AlertBanner />
-          <Navigation />
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/heatmaps" element={<Heatmaps />} />
-            <Route path="/reports" element={<CommunityReports />} />
-            <Route path="/sitreps" element={<SitReps />} />
-            <Route path="/climate" element={<ClimateProjections />} />
-            <Route path="/settings" element={<Settings />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            {/* Landing page route - no navigation/alerts shown */}
+            <Route path="/" element={<Landing />} />
+            
+            {/* Dashboard and other routes with full UI */}
+            <Route path="/dashboard" element={
+              <>
+                <AlertBanner />
+                <Navigation />
+                <Dashboard />
+                <ChatWidget />
+              </>
+            } />
+            <Route path="/heatmaps" element={
+              <>
+                <AlertBanner />
+                <Navigation />
+                <Heatmaps />
+                <ChatWidget />
+              </>
+            } />
+            <Route path="/reports" element={
+              <>
+                <AlertBanner />
+                <Navigation />
+                <CommunityReports />
+                <ChatWidget />
+              </>
+            } />
+            <Route path="/sitreps" element={
+              <>
+                <AlertBanner />
+                <Navigation />
+                <SitReps />
+                <ChatWidget />
+              </>
+            } />
+            <Route path="/climate" element={
+              <>
+                <AlertBanner />
+                <Navigation />
+                <ClimateProjections />
+                <ChatWidget />
+              </>
+            } />
+            <Route path="/settings" element={
+              <>
+                <AlertBanner />
+                <Navigation />
+                <Settings />
+                <ChatWidget />
+              </>
+            } />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <ChatWidget />
         </div>
       </BrowserRouter>
     </TooltipProvider>

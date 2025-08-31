@@ -8,20 +8,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse 
 import smtplib
 from email.mime.text import MIMEText
-# from twilio.rest import Client   # pip install twilio
+from twilio.rest import Client   # pip install twilio
 
-
+# Twilio Credentials (replace with real)
+TWILIO_SID = "US850696d9e8d9f151c09e20b00718983b"
+TWILIO_AUTH_TOKEN = "harsh@"
+TWILIO_PHONE = "+1234567890"   # your Twilio number
 
 # Alert recipients
 PHONE_NUMBERS = ["+916356671251", "+919724966608"]
-EMAILS = ["202512029@dau.ac.in", "harshvardhansinh.work@gmail.com"]
+EMAILS = ["202512029@dau.ac.in", "202512097@dau.ac.in"]
 
 # Email settings (example with Gmail SMTP)
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL_SENDER = "lnt.maintenance.inventory@gmail.com"
-EMAIL_PASSWORD = "qtsm vuix dypj ubu"  
+EMAIL_SENDER = "202512047@dau.ac.in"
+EMAIL_PASSWORD = "harsh@dau.in"  # App password, not real Gmail password
 # -------------------
+
 
 
 
@@ -48,20 +52,19 @@ app.add_middleware(
 )
 
 
-
-# # ================= ALERT FUNCTIONS =================
-# def send_sms(message: str):
-#     try:
-#         client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
-#         for phone in PHONE_NUMBERS:
-#             client.messages.create(
-#                 body=message,
-#                 from_=TWILIO_PHONE,
-#                 to=phone
-#             )
-#         print("✅ SMS alerts sent")
-#     except Exception as e:
-#         print("❌ SMS sending failed:", e)
+# ================= ALERT FUNCTIONS =================
+def send_sms(message: str):
+    try:
+        client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
+        for phone in PHONE_NUMBERS:
+            client.messages.create(
+                body=message,
+                from_=TWILIO_PHONE,
+                to=phone
+            )
+        print("✅ SMS alerts sent")
+    except Exception as e:
+        print("❌ SMS sending failed:", e)
 
 
 def send_email(message: str, subject="⚠ Disaster Alert"):
@@ -85,7 +88,7 @@ def send_email(message: str, subject="⚠ Disaster Alert"):
 
 def trigger_alert(alert_message: str):
     """Send both SMS and Email alerts"""
-    # send_sms(alert_message)
+    send_sms(alert_message)
     send_email(alert_message)
 # ==================================================
 
@@ -161,7 +164,6 @@ def predict_cyclone(features: CycloneInput):
         features.wind_direction_100m
     ]])
 
-
     prediction = int(model2.predict(data)[0])
     if prediction == 1:
         alert_message = "⚠ ALERT: Cyclone detected in your region. Please stay safe, avoid coastal areas, and follow local advisories."
@@ -193,7 +195,7 @@ def forecast_next_5_years():
     """Predict ocean pH for next 5 years based on last row + trends"""
     
     # Get absolute path (safe way)
-    file_path = os.path.join(os.path.dirname(__file__), "models", "OceanAcidificaion", "oceanData.csv")
+    file_path = os.path.join(os.path.dirname(_file_), "models", "OceanAcidificaion", "oceanData.csv")
     
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Dataset not found at {file_path}")
